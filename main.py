@@ -3,87 +3,113 @@ from telegram.ext import (
     Application,
     CommandHandler,
     CallbackQueryHandler,
+    MessageHandler,
     ContextTypes,
-from telegram.ext import MessageHandler, filters
+    filters
+)
 from openai import OpenAI
-) 
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
 REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=182763900728"
-SUPPORT_USERNAME = "https://t.me/Vpnusern"
+SUPPORT_LINK = "https://t.me/Vpnusern"
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     keyboard = [
         [InlineKeyboardButton("🟢 Register Now", url=REGISTER_LINK)],
-        [InlineKeyboardButton("✅ I Have Registered", callback_data="menu")],
+        [InlineKeyboardButton("✅ I Have Registered", callback_data="menu")]
     ]
 
-    text = (
-        "👋 *Welcome to YAARWIN SUPPORT BOT*\n\n"
-        "🎉 Welcome!\n"
-        "Please register first using the button below."
-    )
-
     await update.message.reply_text(
-        text,
-        parse_mode="Markdown",
-        reply_markup=InlineKeyboardMarkup(keyboard),
+        "👋 Welcome to YAARWIN SUPPORT BOT\n\n"
+        "Please register first using the button below.",
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     query = update.callback_query
     await query.answer()
 
     if query.data == "menu":
+
         keyboard = [
             [InlineKeyboardButton("💰 Deposit", callback_data="deposit")],
             [InlineKeyboardButton("💸 Withdraw", callback_data="withdraw")],
             [InlineKeyboardButton("🎁 Bonus", callback_data="bonus")],
             [InlineKeyboardButton("💼 Daily Salary", callback_data="salary")],
             [InlineKeyboardButton("👥 Referral", callback_data="referral")],
-            [InlineKeyboardButton("📞 Customer Support", url=SUPPORT_USERNAME)],
+            [InlineKeyboardButton("📞 Customer Support", url=SUPPORT_LINK)]
         ]
 
         await query.edit_message_text(
-            "✅ *Registration Completed!*\n\nChoose an option:",
-            parse_mode="Markdown",
-            reply_markup=InlineKeyboardMarkup(keyboard),
+            "✅ Registration Completed!\n\nChoose an option:",
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
+
     elif query.data == "deposit":
-        await query.answer()
         await query.message.reply_text(
             "💰 Deposit Support\n\nPlease contact customer support."
         )
 
     elif query.data == "withdraw":
-        await query.answer()
         await query.message.reply_text(
             "💸 Withdrawal Support\n\nPlease contact customer support."
         )
 
     elif query.data == "bonus":
-        await query.answer()
         await query.message.reply_text(
             "🎁 Bonus information will be updated soon."
         )
 
     elif query.data == "salary":
-        await query.answer()
         await query.message.reply_text(
             "💼 Daily Salary information will be updated soon."
         )
 
     elif query.data == "referral":
-        await query.answer()
         await query.message.reply_text(
-            "👥 Referral Program information will be updated soon."
+            "👥 Referral information will be updated soon."
+        )
+
+
+async def ai_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user_text = update.message.text
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a real human support agent. "
+                        "Reply naturally in Hindi or English depending on user language."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": user_text
+                }
+            ]
+        )
+
+        reply = response.choices[0].message.content
+
+        await update.message.reply_text(reply)
+
+    except Exception:
+        await update.message.reply_text(
+            "Sorry, please try again later."
         )
 
 
@@ -91,32 +117,10 @@ app = Application.builder().token(BOT_TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button))
-
-print("✅ YAARWIN SUPPORT BOT Started...")
-app.run_polling()
-async def ai_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    user_message = update.message.text
-
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "Reply like a real human support agent. Use Hindi or English."
-            },
-            {
-                "role": "user",
-                "content": user_message
-            }
-        ]
-    )
-
-    await update.message.reply_text(
-        response.choices[0].message.content
-    )
-
-
 app.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, ai_chat)
-                                 )
+)
+
+print("✅ YAARWIN SUPPORT BOT STARTED")
+
+app.run_polling()
