@@ -1,41 +1,22 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import asyncio
 
-BOT_TOKEN = "YAHAN_APNA_NAYA_BOT_TOKEN_DALO"
+BOT_TOKEN = "8907587670:AAEWj0GM9ngYuNmliBel3qCXIlPo01TBt1o"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "👋 Welcome!\n\n"
-        "Main Support Bot hoon.\n\n"
-        "Commands:\n"
-        "/help - Help\n"
-        "/contact - Contact Support"
-    )
+    await update.message.reply_text("👋 Welcome!")
 
 async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "❓ Help:\n"
-        "• Registration issue\n"
-        "• Login issue\n"
-        "• General support"
-    )
+    await update.message.reply_text("Help")
 
 async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "📩 Contact Support:\n"
-        "@YourSupportUsername"
-    )
+    await update.message.reply_text("@YourSupportUsername")
 
-async def main():
-    app = Application.builder().token(BOT_TOKEN).build()
+app = Application.builder().token(BOT_TOKEN).build()
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_cmd))
-    app.add_handler(CommandHandler("contact", contact))
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", help_cmd))
+app.add_handler(CommandHandler("contact", contact))
 
-    print("Bot Started...")
-    await app.run_polling()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+print("Bot Started...")
+app.run_polling()
