@@ -397,13 +397,51 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ================= ERROR HANDLER =================
 
-app.add_error_handler(
-    error_handler
-)
+async def error_handler(update, context):
+    logging.error(f"Error: {context.error}")
 
-print("✅ VIRENDRA BOT STARTED")
 
-app.run_polling()
+# ================= BOT START =================
+
+def main():
+
+    app = Application.builder().token(BOT_TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+
+    app.add_handler(CallbackQueryHandler(buttons))
+
+    app.add_handler(CommandHandler("reply", admin_reply))
+
+    app.add_handler(CommandHandler("users", users_count))
+
+    app.add_handler(CommandHandler("broadcast", broadcast))
+
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & ~filters.COMMAND,
+            user_chat
+        ),
+        group=1
+    )
+
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & ~filters.COMMAND,
+            ai_chat
+        ),
+        group=2
+    )
+
+    app.add_error_handler(error_handler)
+
+    print("✅ VIRENDRA BOT STARTED")
+
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()
 
 
 
