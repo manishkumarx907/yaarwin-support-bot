@@ -1,9 +1,11 @@
-BOT_TOKEN = "8907587670:AAEWj0GM9ngYuNmliBel3qCXIlPo01TBt1o"
+import os
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+ADMIN_ID = 123456789  # Apna Telegram ID dalna
 
 REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=182763900728"
 
-SUPPORT_USERNAME = "https://t.me/Vpnusern"
+SUPPORT_LINK = "https://t.me/Vpnusern"
 
-BOT_NAME = "YAAR WIN SUPPORT"
-
-ADMIN_ID = 123456789
+CHANNEL_USERNAME = "@https://t.me/sophiaghail_YAARWIN"
