@@ -1,3 +1,4 @@
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -10,13 +11,15 @@ from telegram.ext import (
 from openai import OpenAI
 import os
 
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
+
 REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=182763900728"
-SUPPORT_LINK = "https://t.me/Vpnusern"
+SUPPORT_USERNAME = "https://t.me/Vpnusern"
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -27,8 +30,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     await update.message.reply_text(
-        "👋 Welcome to YAARWIN SUPPORT BOT\n\n"
-        "Please register first using the button below.",
+        "👋 Welcome to YAARWIN SUPPORT BOT\n\nPlease register first.",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
@@ -46,7 +48,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("🎁 Bonus", callback_data="bonus")],
             [InlineKeyboardButton("💼 Daily Salary", callback_data="salary")],
             [InlineKeyboardButton("👥 Referral", callback_data="referral")],
-            [InlineKeyboardButton("📞 Customer Support", url=SUPPORT_LINK)]
+            [InlineKeyboardButton("📞 Customer Support", url=SUPPORT_USERNAME)]
         ]
 
         await query.edit_message_text(
@@ -57,12 +59,12 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif query.data == "deposit":
         await query.message.reply_text(
-            "💰 Deposit Support\n\nPlease contact customer support."
+            "💰 Deposit Support\nPlease contact customer support."
         )
 
     elif query.data == "withdraw":
         await query.message.reply_text(
-            "💸 Withdrawal Support\n\nPlease contact customer support."
+            "💸 Withdrawal Support\nPlease contact customer support."
         )
 
     elif query.data == "bonus":
@@ -81,20 +83,20 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 
+# AI CHAT
 async def ai_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    user_text = update.message.text
-
     try:
+
+        user_text = update.message.text
+
         response = client.chat.completions.create(
             model="gpt-4.1-mini",
             messages=[
                 {
                     "role": "system",
-                    "content": (
-                        "You are a real human support agent. "
-                        "Reply naturally in Hindi or English depending on user language."
-                    )
+                    "content":
+                    "You are YAARWIN support agent. Reply like a real human. Use Hindi and English both."
                 },
                 {
                     "role": "user",
@@ -103,11 +105,11 @@ async def ai_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ]
         )
 
-        reply = response.choices[0].message.content
+        answer = response.choices[0].message.content
 
-        await update.message.reply_text(reply)
+        await update.message.reply_text(answer)
 
-    except Exception:
+    except Exception as e:
         await update.message.reply_text(
             "Sorry, please try again later."
         )
@@ -115,12 +117,16 @@ async def ai_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 app = Application.builder().token(BOT_TOKEN).build()
 
+
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button))
+
+# AI messages
 app.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, ai_chat)
 )
 
-print("✅ YAARWIN SUPPORT BOT STARTED")
+
+print("YAARWIN BOT STARTED")
 
 app.run_polling()
