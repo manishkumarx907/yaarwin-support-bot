@@ -7,7 +7,7 @@ from telegram.ext import (
 )
 
 import os
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = 8907587670:AAGf6xG_x2HuSpD3WgACsPzlzA2a_Ao5bqo
 
 REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=182763900728"
 SUPPORT_USERNAME = "https://t.me/Vpnusern"
