@@ -6,8 +6,7 @@ from telegram.ext import (
     ContextTypes,
 )
 
-import os
-BOT_TOKEN = "8907587670:AAG8nPYPvw6sZlhB8zIDO_VPthJQwQeE97Y"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=182763900728"
 SUPPORT_USERNAME = "https://t.me/Vpnusern"
