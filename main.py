@@ -455,19 +455,22 @@ def main():
     )
 
 
-    app.add_handler(
-        MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
-            user_chat
-        )
-    )
+   app.add_handler(
+    MessageHandler(
+        filters.TEXT & ~filters.COMMAND,
+        user_chat
+    ),
+    group=1
+)
 
 
-    app.add_handler(
-        MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
-            ai_chat
-        )
+app.add_handler(
+    MessageHandler(
+        filters.TEXT & ~filters.COMMAND,
+        ai_chat
+    ),
+    group=2
+)
     )
 
 
