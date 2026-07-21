@@ -33,6 +33,4 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_cmd))
 app.add_handler(CommandHandler("contact", contact))
 print("Bot Started...")
-
- print("Bot Started...")
 app.run_polling()
