@@ -4,11 +4,15 @@ from telegram.ext import (
     CommandHandler,
     CallbackQueryHandler,
     ContextTypes,
+from telegram.ext import MessageHandler, filters
+from openai import OpenAI
 ) 
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=182763900728"
 SUPPORT_USERNAME = "https://t.me/Vpnusern"
 
@@ -90,3 +94,29 @@ app.add_handler(CallbackQueryHandler(button))
 
 print("✅ YAARWIN SUPPORT BOT Started...")
 app.run_polling()
+async def ai_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user_message = update.message.text
+
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "Reply like a real human support agent. Use Hindi or English."
+            },
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
+    )
+
+    await update.message.reply_text(
+        response.choices[0].message.content
+    )
+
+
+app.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, ai_chat)
+                                 )
