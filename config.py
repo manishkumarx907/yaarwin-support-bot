@@ -8,4 +8,4 @@ REGISTER_LINK = "https://www.yaarwin.online/#/register?invitationCode=1827639007
 
 SUPPORT_LINK = "https://t.me/Vpnusern"
 
-CHANNEL_USERNAME = "@https://t.me/sophiaghail_YAARWIN"
+CHANNEL_USERNAME = "@https://t.me/sophiaghail_YAARWIN" 
